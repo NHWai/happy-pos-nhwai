@@ -41,8 +41,11 @@ export default function Navbar() {
     { label: "Setting", icon: <SettingsIcon />, link: "setting" },
   ];
   const pageLabel =
-    drawerItems[drawerItems.findIndex((el) => el.link === pathname.slice(1))]
-      .label;
+    pathname === "/"
+      ? "Home"
+      : drawerItems[
+          drawerItems.findIndex((el) => el.link === pathname.slice(1))
+        ].label;
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -95,8 +98,9 @@ export default function Navbar() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={toggleDrawer(true)}
           >
-            <MenuIcon onClick={toggleDrawer(true)} />
+            <MenuIcon />
           </IconButton>
           <Drawer anchor="left" open={isOpen} onClose={toggleDrawer(false)}>
             {list()}
