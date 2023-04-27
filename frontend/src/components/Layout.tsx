@@ -1,15 +1,15 @@
-import { PageLayout } from "./PageLayout";
+import { MainLayout } from "./MainLayout";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
 import Box from "@mui/material/Box";
 
 export const Layout = () => {
   return (
-    <PageLayout>
+    <MainLayout>
       <Navbar />
       <Box sx={{ paddingX: "1.5rem" }}>
         <Outlet />
       </Box>
-    </PageLayout>
+    </MainLayout>
   );
 };

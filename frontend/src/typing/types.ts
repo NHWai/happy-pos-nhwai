@@ -1,4 +1,5 @@
 interface BaseType {
+  id: number;
   name: string;
 }
 
@@ -16,4 +17,8 @@ export interface Addon extends BaseType {
 
 export interface AddonCategory extends BaseType {
   isRequired: boolean;
+}
+
+export interface Location extends BaseType {
+  address?: string;
 }

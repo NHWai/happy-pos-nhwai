@@ -9,6 +9,8 @@ import { MenuCategories } from "./routes/MenuCategories.tsx";
 import { Addons } from "./routes/Addons.tsx";
 import { AddonCategories } from "./routes/AddonCategories.tsx";
 import { Setting } from "./routes/Setting.tsx";
+import { MenuDetail } from "./routes/MenuDetail.tsx";
+import AppProvider from "./components/AppContext.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/menus",
         element: <Menus />,
+      },
+      {
+        path: "/menus/:id",
+        element: <MenuDetail />,
       },
       {
         path: "/menu-categories",
@@ -44,7 +50,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
+  <AppProvider>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </AppProvider>
 );

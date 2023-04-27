@@ -24,6 +24,7 @@ import Divider from "@mui/material/Divider";
 export default function Navbar() {
   let { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const locationId = localStorage.getItem("selectedLocation");
 
   const drawerItems = [
     { label: "Menus", icon: <LocalDiningIcon />, link: "menus" },
@@ -41,11 +42,9 @@ export default function Navbar() {
     { label: "Setting", icon: <SettingsIcon />, link: "setting" },
   ];
   const pageLabel =
-    pathname === "/"
-      ? "Home"
-      : drawerItems[
-          drawerItems.findIndex((el) => el.link === pathname.slice(1))
-        ].label;
+    drawerItems[drawerItems.findIndex((el) => el.link === pathname.slice(1))]
+      ?.label || "Home";
+
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -64,12 +63,15 @@ export default function Navbar() {
         role="presentation"
         onClick={toggleDrawer(false)}
         onKeyDown={toggleDrawer(false)}
-        sx={{ width: "25vw" }}
+        sx={{ width: "250" }}
       >
         <List>
           {drawerItems.slice(0, 4).map((item) => (
             <ListItem key={item.label}>
-              <ListItemButton component={RouterLink} to={item.link}>
+              <ListItemButton
+                component={RouterLink}
+                to={item.link + "?location=" + locationId}
+              >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.label} />
               </ListItemButton>
