@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import { Box, Button, TextField, Typography } from "@mui/material";
-
-export const Menus = () => {
-  return (
-    <Box
-      sx={{
-        marginX: "auto",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-=======
 import React from "react";
 import { Box, Button, Chip, Stack, TextField, Typography } from "@mui/material";
 import { RouteLayout } from "../components/RouteLayout";
@@ -19,50 +5,110 @@ import { Menu } from "../typing/types";
 import { config } from "../config/config";
 import { Link, useSearchParams } from "react-router-dom";
 
+interface NewMenu {
+  menuName: string;
+  price: string;
+}
+
 export const Menus = () => {
   const [menuList, setMenuList] = React.useState<Menu[]>();
+  const [newMenu, setNewMenu] = React.useState<NewMenu>({
+    menuName: "",
+    price: "",
+  });
   const [searchParams] = useSearchParams();
+
   React.useEffect(() => {
-    const fetchData = async () => {
-      const url = `${config.baseurl}/menus?location=${searchParams.get(
-        "location"
-      )}`;
-      const res = await fetch(url, {
-        method: "GET",
-      });
-      const data = await res.json();
-      setMenuList(data);
-    };
     fetchData();
   }, []);
+  const fetchData = async () => {
+    const url = `${config.baseurl}/menus?location=${searchParams.get(
+      "location"
+    )}`;
+    const res = await fetch(url, {
+      method: "GET",
+    });
+    const data = await res.json();
+    setMenuList(data);
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMenu((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createMenu();
+  };
+
+  const createMenu = async () => {
+    const myHeaders = new Headers();
+
+    myHeaders.append("Content-Type", "application/json");
+    try {
+      const response = await fetch(`${config.baseurl}/menus/`, {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({
+          ...newMenu,
+          price: Number(newMenu.price),
+          locationId: Number(searchParams.get("location")),
+        }),
+        redirect: "follow",
+      });
+      const data = await response.json();
+      if (data.length === 0) {
+        fetchData();
+        setNewMenu({ menuName: "", price: "" });
+      } else {
+        throw new Error("Something wrong with creating new menu");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <RouteLayout>
->>>>>>> feat/backend-register-routes
       <Typography my={3} variant="h4">
         Create A Menu
       </Typography>
 
       <Box
         component="form"
+        onSubmit={handleSubmit}
         sx={{
           maxWidth: "350px",
           display: "flex",
           flexDirection: "column",
           gap: 2,
-<<<<<<< HEAD
-=======
           marginBottom: 3,
->>>>>>> feat/backend-register-routes
         }}
       >
-        <TextField fullWidth variant="outlined" size="small" label="Name" />
-        <TextField fullWidth variant="outlined" size="small" label="Price" />
-        <Button variant="contained">Create</Button>
+        <TextField
+          fullWidth
+          variant="outlined"
+          size="small"
+          label="Name"
+          name="menuName"
+          value={newMenu.menuName}
+          onChange={handleChange}
+        />
+        <TextField
+          fullWidth
+          variant="outlined"
+          size="small"
+          label="Price"
+          name="price"
+          value={newMenu.price}
+          onChange={handleChange}
+        />
+        <Button type="submit" variant="contained">
+          Create
+        </Button>
       </Box>
-<<<<<<< HEAD
-    </Box>
-=======
       <Box
         sx={{
           maxWidth: "400px",
@@ -80,6 +126,5 @@ export const Menus = () => {
         </Stack>
       </Box>
     </RouteLayout>
->>>>>>> feat/backend-register-routes
   );
 };

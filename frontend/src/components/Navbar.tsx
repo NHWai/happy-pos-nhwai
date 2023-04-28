@@ -42,17 +42,9 @@ export default function Navbar() {
     { label: "Setting", icon: <SettingsIcon />, link: "setting" },
   ];
   const pageLabel =
-<<<<<<< HEAD
-    pathname === "/"
-      ? "Home"
-      : drawerItems[
-          drawerItems.findIndex((el) => el.link === pathname.slice(1))
-        ].label;
-=======
     drawerItems[drawerItems.findIndex((el) => el.link === pathname.slice(1))]
       ?.label || "Home";
 
->>>>>>> feat/backend-register-routes
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (

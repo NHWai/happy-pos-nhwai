@@ -1,6 +1,11 @@
 import express, { Request, Response } from "express";
 import { db } from "../db";
 import promiseRouter from "express-promise-router";
+import { QueryResult } from "pg";
+
+interface Menu {
+  id: number;
+}
 
 const router = promiseRouter();
 
@@ -49,6 +54,26 @@ router.get("/:id", async (req: Request, res: Response) => {
   };
 
   res.send(resBody);
+});
+
+router.post("/", async (req: Request, res: Response) => {
+  const { menuName, price, locationId } = req.body;
+  const insertMenusQuery = `INSERT INTO menus(name,price) VALUES ($1,$2) RETURNING id`;
+  const insertMenusLocationsQuery =
+    "INSERT INTO menus_locations (menus_id, locations_id) VALUES ($1, $2)";
+
+  const { rows }: QueryResult<Menu> = await db.query(insertMenusQuery, [
+    menuName,
+    price,
+  ]);
+  const menu_id = rows[0].id;
+
+  const result = await db.query(insertMenusLocationsQuery, [
+    menu_id,
+    locationId,
+  ]);
+
+  res.send(result.rows);
 });
 
 export default router;
