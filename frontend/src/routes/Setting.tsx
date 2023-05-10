@@ -9,9 +9,37 @@ import {
   Typography,
 } from "@mui/material";
 import { AppContext } from "../components/AppContext";
+import { useSearchParams } from "react-router-dom";
+import { config } from "../config/config";
 
 export const Setting = () => {
-  const { locations } = React.useContext(AppContext);
+  const { locations, setLocations } = React.useContext(AppContext);
+  const [_, setSearchParams] = useSearchParams();
+
+  React.useEffect(() => {
+    const getLocations = async (url: string) => {
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+        });
+        if (response.status === 200) {
+          const data = await response.json();
+          if (!localStorage.getItem("selectedLocation")) {
+            localStorage.setItem(
+              "selectedLocation",
+              JSON.stringify(data[0].id)
+            );
+          }
+          setLocations(data);
+        } else {
+          throw new Error(await response.json());
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    locations.length === 0 && getLocations(`${config.baseurl}/locations`);
+  }, []);
 
   const [userSelectlocation, setUserSelectlocation] = React.useState(
     localStorage.getItem("selectedLocation") || ""
@@ -19,6 +47,7 @@ export const Setting = () => {
 
   const handleChange = (event: SelectChangeEvent) => {
     localStorage.setItem("selectedLocation", event.target.value as string);
+    setSearchParams({ location: event.target.value as string });
     setUserSelectlocation(event.target.value as string);
   };
   return (

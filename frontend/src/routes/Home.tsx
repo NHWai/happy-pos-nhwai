@@ -5,6 +5,7 @@ import { config } from "../config/config";
 
 export const Home = () => {
   const { setLocations } = React.useContext(AppContext);
+
   React.useEffect(() => {
     const getLocations = async (url: string) => {
       try {

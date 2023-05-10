@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-import { Layout } from "./components/Layout.tsx";
+import { PrivateRoutes } from "./components/PrivateRoutes.tsx";
 import { Menus } from "./routes/Menus.tsx";
 import { MenuCategories } from "./routes/MenuCategories.tsx";
 import { Addons } from "./routes/Addons.tsx";
@@ -11,11 +11,14 @@ import { AddonCategories } from "./routes/AddonCategories.tsx";
 import { Setting } from "./routes/Setting.tsx";
 import { MenuDetail } from "./routes/MenuDetail.tsx";
 import AppProvider from "./components/AppContext.tsx";
+import Login from "./routes/Login.tsx";
+import Register from "./routes/Register.tsx";
+import Logout from "./routes/Logout.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <PrivateRoutes />,
     children: [
       {
         path: "/",
@@ -46,6 +49,18 @@ const router = createBrowserRouter([
         element: <Setting />,
       },
     ],
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
   },
 ]);
 

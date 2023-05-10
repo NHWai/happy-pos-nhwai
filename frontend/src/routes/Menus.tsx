@@ -3,7 +3,7 @@ import { Box, Button, Chip, Stack, TextField, Typography } from "@mui/material";
 import { RouteLayout } from "../components/RouteLayout";
 import { Menu } from "../typing/types";
 import { config } from "../config/config";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 interface NewMenu {
   menuName: string;
@@ -17,20 +17,40 @@ export const Menus = () => {
     price: "",
   });
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetchData();
   }, []);
+
   const fetchData = async () => {
     const url = `${config.baseurl}/menus?location=${searchParams.get(
       "location"
     )}`;
-    const res = await fetch(url, {
-      method: "GET",
-    });
-    const data = await res.json();
-    setMenuList(data);
+    const myHeaders = new Headers();
+    const jwttoken = localStorage.getItem("token");
+    jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
+
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMenuList(data);
+      } else {
+        const data = await res.json();
+        console.log(data);
+        navigate(data.redirecturl);
+        throw new Error(data.message);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMenu((prev) => ({
       ...prev,
@@ -47,6 +67,8 @@ export const Menus = () => {
     const myHeaders = new Headers();
 
     myHeaders.append("Content-Type", "application/json");
+    const jwttoken = localStorage.getItem("token");
+    jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
     try {
       const response = await fetch(`${config.baseurl}/menus/`, {
         method: "POST",
@@ -95,6 +117,7 @@ export const Menus = () => {
           name="menuName"
           value={newMenu.menuName}
           onChange={handleChange}
+          autoComplete="off"
         />
         <TextField
           fullWidth
@@ -104,6 +127,7 @@ export const Menus = () => {
           name="price"
           value={newMenu.price}
           onChange={handleChange}
+          autoComplete="off"
         />
         <Button type="submit" variant="contained">
           Create

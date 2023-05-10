@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -20,11 +20,29 @@ import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import LunchDiningIcon from "@mui/icons-material/LunchDining";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Divider from "@mui/material/Divider";
+import { AccountCircle } from "@mui/icons-material";
+import { Menu, MenuItem } from "@mui/material";
 
 export default function Navbar() {
   let { pathname } = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const locationId = localStorage.getItem("selectedLocation");
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem("exp");
+    localStorage.removeItem("token");
+    navigate("/logout");
+  };
 
   const drawerItems = [
     { label: "Menus", icon: <LocalDiningIcon />, link: "menus" },
@@ -70,7 +88,7 @@ export default function Navbar() {
             <ListItem key={item.label}>
               <ListItemButton
                 component={RouterLink}
-                to={item.link + "?location=" + locationId}
+                to={"/" + item.link + "?location=" + locationId}
               >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.label} />
@@ -80,7 +98,10 @@ export default function Navbar() {
           <Divider />
           {drawerItems.slice(-1).map((item) => (
             <ListItem key={item.label}>
-              <ListItemButton component={RouterLink} to={item.link}>
+              <ListItemButton
+                component={RouterLink}
+                to={"/" + item.link + "?location=" + locationId}
+              >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.label} />
               </ListItemButton>
@@ -110,7 +131,41 @@ export default function Navbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {pageLabel}
           </Typography>
-          <Button color="inherit">Login</Button>
+          {window.location.pathname !== "/login" &&
+            (!localStorage.getItem("token") ? (
+              <Button component={RouterLink} to={"/login"} color="inherit">
+                Login
+              </Button>
+            ) : (
+              <div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+                </Menu>
+              </div>
+            ))}
         </Toolbar>
       </AppBar>
     </Box>

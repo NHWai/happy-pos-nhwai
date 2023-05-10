@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { db } from "../db";
 import promiseRouter from "express-promise-router";
 import { QueryResult } from "pg";
