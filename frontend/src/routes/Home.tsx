@@ -8,9 +8,13 @@ export const Home = () => {
 
   React.useEffect(() => {
     const getLocations = async (url: string) => {
+      const myHeaders = new Headers();
+      const jwttoken = localStorage.getItem("token");
+      jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
       try {
         const response = await fetch(url, {
           method: "GET",
+          headers: myHeaders,
         });
         if (response.status === 200) {
           const data = await response.json();

@@ -80,15 +80,16 @@ export const Menus = () => {
         }),
         redirect: "follow",
       });
-      const data = await response.json();
-      if (data.length === 0) {
+      if (response.ok) {
         fetchData();
         setNewMenu({ menuName: "", price: "" });
       } else {
-        throw new Error("Something wrong with creating new menu");
+        const data = await response.json();
+        console.log(data);
+        throw new Error(data.message);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err, "stops here");
     }
   };
 

@@ -1,16 +1,10 @@
-import express, { Request, Response } from "express";
-import { db } from "../db";
 import promiseRouter from "express-promise-router";
+import LocationsController from "../controllers/LocationsController";
+import verifyUser from "../auth/verify";
 
 const router = promiseRouter();
 
-router.get("/", async (req: Request, res: Response) => {
-  const result = await db.query("SELECT * FROM locations", []);
-  res.status(200).json(result.rows);
-});
-
-// router.get("/:id", async (req: Request, res: Response) => {
-
-// });
+router.get("/", verifyUser, LocationsController.getAllLocations);
 
 export default router;
+   

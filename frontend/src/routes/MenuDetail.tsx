@@ -45,8 +45,12 @@ export const MenuDetail = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       const url = `${config.baseurl}/menus/${id}`;
+      const myHeaders = new Headers();
+      const jwttoken = localStorage.getItem("token");
+      jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
       const res = await fetch(url, {
         method: "GET",
+        headers: myHeaders,
       });
       const data = await res.json();
       console.log(data);
