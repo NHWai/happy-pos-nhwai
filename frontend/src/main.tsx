@@ -14,11 +14,14 @@ import AppProvider from "./components/AppContext.tsx";
 import Login from "./routes/Login.tsx";
 import Register from "./routes/Register.tsx";
 import Logout from "./routes/Logout.tsx";
+import ErrorBoundary from "./components/ErrorBoundary.tsx";
+import { ErrorElement } from "./routes/ErrorElement.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <PrivateRoutes />,
+    errorElement: <ErrorElement />,
     children: [
       {
         path: "/",
@@ -47,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: "/setting",
         element: <Setting />,
+      },
+      {
+        path: "/error/:errmsg",
+        element: <ErrorElement />,
       },
     ],
   },

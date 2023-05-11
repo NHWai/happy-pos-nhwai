@@ -44,7 +44,7 @@ export const Menus = () => {
         const data = await res.json();
         console.log(data);
         navigate(data.redirecturl);
-        throw new Error(data.message);
+        throw Error(data.message);
       }
     } catch (err) {
       console.log(err);
@@ -69,27 +69,23 @@ export const Menus = () => {
     myHeaders.append("Content-Type", "application/json");
     const jwttoken = localStorage.getItem("token");
     jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
-    try {
-      const response = await fetch(`${config.baseurl}/menus/`, {
-        method: "POST",
-        headers: myHeaders,
-        body: JSON.stringify({
-          ...newMenu,
-          price: Number(newMenu.price),
-          locationId: Number(searchParams.get("location")),
-        }),
-        redirect: "follow",
-      });
-      if (response.ok) {
-        fetchData();
-        setNewMenu({ menuName: "", price: "" });
-      } else {
-        const data = await response.json();
-        console.log(data);
-        throw new Error(data.message);
-      }
-    } catch (err) {
-      console.error(err, "stops here");
+
+    const response = await fetch(`${config.baseurl}/menus/`, {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify({
+        ...newMenu,
+        price: Number(newMenu.price),
+        locationId: Number(searchParams.get("location")),
+      }),
+      redirect: "follow",
+    });
+    if (response.ok) {
+      fetchData();
+      setNewMenu({ menuName: "", price: "" });
+    } else {
+      const data = await response.json();
+      navigate(`/error/${response.status}-${data.message}`);
     }
   };
 

@@ -12,7 +12,6 @@ router.post("/", verifyUser, MenusController.createMenu);
 
 // error handling middleware
 router.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error("err catch");
   res
     .status(err.status || 500)
     .json({ message: err.message || "Something went wrong" });
