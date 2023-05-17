@@ -58,27 +58,26 @@ export const Menus = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createMenu();
+    const formEl = new FormData(e.target as HTMLFormElement);
+    formEl.append("locationId", searchParams.get("location") as string);
+    for (let [name, value] of formEl.entries()) {
+      console.log(name, value);
+    }
+    createMenu(formEl);
   };
 
-  const createMenu = async () => {
+  const createMenu = async (formEl: FormData) => {
     const myHeaders = new Headers();
 
-    myHeaders.append("Content-Type", "application/json");
     const jwttoken = localStorage.getItem("token");
     jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
 
     const response = await fetch(`${config.baseurl}/menus/`, {
       method: "POST",
       headers: myHeaders,
-      body: JSON.stringify({
-        ...newMenu,
-        price: Number(newMenu.price),
-        locationId: Number(searchParams.get("location")),
-      }),
-      redirect: "follow",
+      body: formEl,
     });
     if (response.ok) {
       fetchData();
@@ -105,6 +104,7 @@ export const Menus = () => {
           gap: 2,
           marginBottom: 3,
         }}
+        encType="multipart/form-data"
       >
         <TextField
           fullWidth
@@ -126,6 +126,7 @@ export const Menus = () => {
           onChange={handleChange}
           autoComplete="off"
         />
+        <input name="menuImg" type="file" />
         <Button type="submit" variant="contained">
           Create
         </Button>

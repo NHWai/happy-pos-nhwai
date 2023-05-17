@@ -50,15 +50,17 @@ const getMenusById = async (id: number) => {
 const createMenu = async (
   menuName: string,
   price: number,
-  locationId: number
+  locationId: number,
+  menuUrl: string
 ) => {
-  const insertMenusQuery = `INSERT INTO menus(name,price) VALUES ($1,$2) RETURNING id`;
+  const insertMenusQuery = `INSERT INTO menus(name,price,menu_url) VALUES ($1,$2,$3) RETURNING id`;
   const insertMenusLocationsQuery =
     "INSERT INTO menus_locations (menus_id, locations_id) VALUES ($1, $2)";
 
   const { rows }: QueryResult<Menu> = await db.query(insertMenusQuery, [
     menuName,
     price,
+    menuUrl,
   ]);
   const menu_id = rows[0].id;
 

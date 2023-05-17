@@ -1,5 +1,5 @@
 import promiseRouter from "express-promise-router";
-
+import upload from "../config/multerUpload";
 import MenusController from "../controllers/MenusController";
 import verifyUser from "../auth/verify";
 import { NextFunction, Request, Response } from "express";
