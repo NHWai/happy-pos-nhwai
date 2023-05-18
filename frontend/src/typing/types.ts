@@ -5,6 +5,7 @@ interface BaseType {
 
 export interface Menu extends BaseType {
   price: number;
+  menu_url: string | undefined;
 }
 
 export interface MenuCategory extends BaseType {}

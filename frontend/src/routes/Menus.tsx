@@ -1,21 +1,15 @@
 import React from "react";
-import { Box, Button, Chip, Stack, TextField, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { RouteLayout } from "../components/RouteLayout";
 import { Menu } from "../typing/types";
 import { config } from "../config/config";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-
-interface NewMenu {
-  menuName: string;
-  price: string;
-}
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import MenuItem from "../components/MenuItem";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export const Menus = () => {
   const [menuList, setMenuList] = React.useState<Menu[]>();
-  const [newMenu, setNewMenu] = React.useState<NewMenu>({
-    menuName: "",
-    price: "",
-  });
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -51,101 +45,43 @@ export const Menus = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewMenu((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formEl = new FormData(e.target as HTMLFormElement);
-    formEl.append("locationId", searchParams.get("location") as string);
-    for (let [name, value] of formEl.entries()) {
-      console.log(name, value);
-    }
-    createMenu(formEl);
-  };
-
-  const createMenu = async (formEl: FormData) => {
-    const myHeaders = new Headers();
-
-    const jwttoken = localStorage.getItem("token");
-    jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
-
-    const response = await fetch(`${config.baseurl}/menus/`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formEl,
-    });
-    if (response.ok) {
-      fetchData();
-      setNewMenu({ menuName: "", price: "" });
-    } else {
-      const data = await response.json();
-      navigate(`/error/${response.status}-${data.message}`);
-    }
-  };
-
   return (
     <RouteLayout>
-      <Typography my={3} variant="h4">
-        Create A Menu
-      </Typography>
-
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
-          maxWidth: "350px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          marginBottom: 3,
-        }}
-        encType="multipart/form-data"
-      >
-        <TextField
-          fullWidth
-          variant="outlined"
-          size="small"
-          label="Name"
-          name="menuName"
-          value={newMenu.menuName}
-          onChange={handleChange}
-          autoComplete="off"
-        />
-        <TextField
-          fullWidth
-          variant="outlined"
-          size="small"
-          label="Price"
-          name="price"
-          value={newMenu.price}
-          onChange={handleChange}
-          autoComplete="off"
-        />
-        <input name="menuImg" type="file" />
-        <Button type="submit" variant="contained">
-          Create
-        </Button>
-      </Box>
-      <Box
-        sx={{
-          maxWidth: "400px",
-        }}
-      >
-        <Typography mb={1} variant="h5">
-          Menu Lists
-        </Typography>
-        <Stack flexDirection={"row"} gap={1}>
-          {menuList?.map((item) => (
-            <Link key={item.name} to={`/menus/${item.id}`}>
-              <Chip label={item.name} style={{ cursor: "pointer" }} />
-            </Link>
+      <Box sx={{ width: "100%", marginTop: 3 }}>
+        <Grid container spacing={{ xs: 2, md: 3 }}>
+          <Grid item xs={6} sm={4} md={3}>
+            <Box
+              sx={{
+                padding: 1,
+                paddingBottom: 0,
+                textAlign: "center",
+                boxShadow: "1px 2px 4px rgba(0,0,0,0.3)",
+                borderRadius: 1,
+                height: { xs: "160px", sm: "220px" },
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Link to="/create-menu">
+                <AddCircleOutlineIcon
+                  sx={{
+                    fontSize: "80px",
+                    cursor: "pointer",
+                    padding: 2,
+                    border: "2px dotted #000",
+                    borderRadius: 1,
+                  }}
+                />
+              </Link>
+            </Box>
+          </Grid>
+          {menuList?.map((menu) => (
+            <Grid key={menu.id} item xs={6} sm={4} md={3}>
+              <MenuItem name={menu.name} url={menu.menu_url} />
+            </Grid>
           ))}
-        </Stack>
+        </Grid>
       </Box>
     </RouteLayout>
   );

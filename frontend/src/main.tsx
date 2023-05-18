@@ -14,8 +14,8 @@ import AppProvider from "./components/AppContext.tsx";
 import Login from "./routes/Login.tsx";
 import Register from "./routes/Register.tsx";
 import Logout from "./routes/Logout.tsx";
-import ErrorBoundary from "./components/ErrorBoundary.tsx";
 import { ErrorElement } from "./routes/ErrorElement.tsx";
+import CreateMenu from "./routes/CreateMenu.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/menus",
         element: <Menus />,
+      },
+      {
+        path: "/create-menu",
+        element: <CreateMenu />,
       },
       {
         path: "/menus/:id",

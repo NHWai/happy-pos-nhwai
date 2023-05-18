@@ -6,7 +6,7 @@ interface Menu {
 }
 
 const getMenusByLocationId = async (locationId: number) => {
-  const text = `select menus.id, menus.name, menus.price from menus
+  const text = `select menus.id, menus.name, menus.price, menus.menu_url from menus
   left join menus_locations on menus.id = menus_locations.menus_id
   where menus_locations.locations_id = $1 and menus_locations.is_available = true`;
   return db.query(text, [locationId]);

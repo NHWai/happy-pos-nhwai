@@ -8,6 +8,7 @@ export const RouteLayout = ({ children }: Props) => {
   return (
     <Box
       sx={{
+        width: "100%",
         marginX: "auto",
         display: "flex",
         flexDirection: "column",
