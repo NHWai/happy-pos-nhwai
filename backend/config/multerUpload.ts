@@ -7,10 +7,10 @@ import s3Storage from "multer-s3";
 // Set S3 endpoint to DigitalOcean Spaces
 const s3 = new S3Client({
   credentials: {
-    accessKeyId: "DO00DPELDPV9CNAZL7N7",
-    secretAccessKey: "Rkx+IUc77EpCuilDjSOmEZwijtMPvI0Tjba2iKsWZOI",
+    accessKeyId: process.env.ACCESS_KEY_ID as string,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY as string,
   },
-  endpoint: "https://sgp1.digitaloceanspaces.com",
+  endpoint: process.env.DG_ENDPOINT,
   region: "sgp1",
 });
 

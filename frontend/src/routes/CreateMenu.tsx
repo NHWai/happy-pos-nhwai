@@ -6,7 +6,6 @@ import Button from "@mui/material/Button/Button";
 import Typography from "@mui/material/Typography/Typography";
 import { config } from "../config/config";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Menu } from "../typing/types";
 
 interface NewMenu {
   menuName: string;
@@ -14,7 +13,6 @@ interface NewMenu {
 }
 
 const CreateMenu = () => {
-  const [menuList, setMenuList] = React.useState<Menu[]>();
   const [newMenu, setNewMenu] = React.useState<NewMenu>({
     menuName: "",
     price: "",
@@ -39,7 +37,7 @@ const CreateMenu = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        setMenuList(data);
+        //navigate to menus page
       } else {
         const data = await res.json();
         console.log(data);
