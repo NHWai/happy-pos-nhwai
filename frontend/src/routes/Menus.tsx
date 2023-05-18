@@ -47,7 +47,7 @@ export const Menus = () => {
 
   return (
     <RouteLayout>
-      <Box sx={{ width: "100%", marginTop: 3 }}>
+      <Box sx={{ width: "100%", marginY: 3 }}>
         <Grid container spacing={{ xs: 2, md: 3 }}>
           <Grid item xs={6} sm={4} md={3}>
             <Box
@@ -55,8 +55,6 @@ export const Menus = () => {
                 padding: 1,
                 paddingBottom: 0,
                 textAlign: "center",
-                boxShadow: "1px 2px 4px rgba(0,0,0,0.3)",
-                borderRadius: 1,
                 height: { xs: "160px", sm: "220px" },
                 display: "flex",
                 justifyContent: "center",
