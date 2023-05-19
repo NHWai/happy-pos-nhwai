@@ -63,7 +63,6 @@ const createMenu = async (
     menuUrl,
   ]);
   const menu_id = rows[0].id;
-
   const result = await db.query(insertMenusLocationsQuery, [
     menu_id,
     locationId,

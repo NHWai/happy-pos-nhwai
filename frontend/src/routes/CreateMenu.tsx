@@ -21,33 +21,7 @@ const CreateMenu = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    const url = `${config.baseurl}/menus?location=${searchParams.get(
-      "location"
-    )}`;
-    const myHeaders = new Headers();
-    const jwttoken = localStorage.getItem("token");
-    jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
-
-    try {
-      const res = await fetch(url, {
-        method: "GET",
-        headers: myHeaders,
-        redirect: "follow",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        //navigate to menus page
-      } else {
-        const data = await res.json();
-        console.log(data);
-        navigate(data.redirecturl);
-        throw Error(data.message);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const locationId = searchParams.get("location") as string;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewMenu((prev) => ({
@@ -59,10 +33,9 @@ const CreateMenu = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formEl = new FormData(e.target as HTMLFormElement);
-    formEl.append("locationId", searchParams.get("location") as string);
-    for (let [name, value] of formEl.entries()) {
-      console.log(name, value);
-    }
+
+    locationId && formEl.append("locationId", locationId);
+
     createMenu(formEl);
   };
 
@@ -72,17 +45,22 @@ const CreateMenu = () => {
     const jwttoken = localStorage.getItem("token");
     jwttoken && myHeaders.append("Authorization", `Bearer ${jwttoken}`);
 
-    const response = await fetch(`${config.baseurl}/menus/`, {
-      method: "POST",
-      headers: myHeaders,
-      body: formEl,
-    });
-    if (response.ok) {
-      fetchData();
-      setNewMenu({ menuName: "", price: "" });
-    } else {
-      const data = await response.json();
-      navigate(`/error/${response.status}-${data.message}`);
+    try {
+      const response = await fetch(`${config.baseurl}/menus`, {
+        method: "POST",
+        headers: myHeaders,
+        body: formEl,
+      });
+      if (response.ok) {
+        navigate(`/menus?location=${locationId}`);
+        setNewMenu({ menuName: "", price: "" });
+      } else {
+        const data = await response.json();
+        navigate(`/error/${response.status}-${data.message}`);
+      }
+    } catch (err) {
+      console.log("error in creating menu");
+      console.error(err);
     }
   };
 

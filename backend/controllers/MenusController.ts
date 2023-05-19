@@ -21,6 +21,7 @@ const getMenusById = async (req: Request, res: Response) => {
 
 const createMenu = async (req: Request, res: Response, next: NextFunction) => {
   //uploading the menu photo
+
   upload(req, res, async (err) => {
     if (err) {
       res.status(500).json({ message: "Internal Server Error" });
@@ -29,13 +30,19 @@ const createMenu = async (req: Request, res: Response, next: NextFunction) => {
     const file = files[0];
     const menuUrl = file.location;
     const { menuName, price, locationId } = req.body;
-
-    const result = await MenuServices.createMenu(
+    const createMenuParams = {
       menuName,
-      Number(price),
-      Number(locationId),
-      menuUrl
+      price: Number(price),
+      locationId: Number(locationId),
+      menuUrl,
+    };
+    const result = await MenuServices.createMenu(
+      createMenuParams.menuName,
+      createMenuParams.price,
+      createMenuParams.locationId,
+      createMenuParams.menuUrl
     );
+
     res.status(201).json({ message: "created a menu" });
   });
 };

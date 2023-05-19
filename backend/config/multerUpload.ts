@@ -1,8 +1,9 @@
-import { Request, request } from "express";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { S3Client } from "@aws-sdk/client-s3";
-import s3Storage from "multer-s3";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 // Set S3 endpoint to DigitalOcean Spaces
 const s3 = new S3Client({

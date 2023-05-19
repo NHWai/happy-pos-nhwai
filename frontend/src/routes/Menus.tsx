@@ -13,6 +13,8 @@ export const Menus = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const locationId = searchParams.get("location");
+
   React.useEffect(() => {
     fetchData();
   }, []);
@@ -61,7 +63,7 @@ export const Menus = () => {
                 alignItems: "center",
               }}
             >
-              <Link to="/create-menu">
+              <Link to={"/create-menu?location=" + locationId}>
                 <AddCircleOutlineIcon
                   sx={{
                     fontSize: "80px",
